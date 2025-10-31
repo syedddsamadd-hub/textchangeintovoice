@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-Voice-Genrator</title>
+    <style>
+    * { box-sizing: border-box;
+       margin: 0;
+       padding: 0; }
+
+    body, html {
+      height: 100%;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: #f5f7fb;
+      color: #112;
+    }
+
+   .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;      
+      justify-content: center;  
+      padding: 40px 20px;
+    }
+
+        .hero__card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      padding: 48px;
+      width: clamp(320px, 60%, 650px); 
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      align-items: center; 
+      text-align: center;  
+    }
+
+    .hero__title {
+      font-size: 2rem;
+     line-height: 1.05;
+      font-weight: 700;
+      color: #0b2340;
+      text-transform: capitalize;
+    }
+
+    
+    .hero__textarea {
+      width: 100%;           
+      padding: 20px;         
+      min-height: 120px;
+      border-radius: 10px;
+      border: 1px solid #d6dbe6;
+      resize: vertical;
+      font-size: 1rem;
+      line-height: 1.4;
+      background: #fbfdff;
+    }
+    .controls {
+      width: 100%;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center; 
+       }
+    .controls select,
+    .controls .btn {
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: 1px solid #cfd7e6;
+      font-size: 0.95rem;
+      background: white;
+    }
+    .controls select {
+      min-width: 220px;
+    }
+
+    .controls .btn {
+      cursor: pointer;
+      background: linear-gradient(180deg,#2a6df6,#1b4ad6);
+      color: white;
+      border: none;
+      box-shadow: 0 6px 18px rgba(41, 85, 255, 0.14);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    .controls .btn:active { transform: translateY(1px); }
+    .controls .btn:focus { outline: 3px solid rgba(41, 85, 255, 0.18); }
+
+    @media (max-width: 480px) {
+      .controls {
+        flex-direction: column;
+      }
+      .controls select { width: 100%; min-width: 0; }
+      .controls .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+     <section class="hero" aria-label="Hero section">
+    <div class="hero__card" role="region" aria-labelledby="hero-heading">
+      <h1 id="hero-heading" class="hero__title">text to voice convertor</h1>
+
+      <textarea
+        class="hero__textarea"
+        placeholder="type something..."
+        aria-label="Hero description area"></textarea>
+
+      <div class="controls" role="group" aria-label="Problem select and lesson button">
+        <select aria-label="Select problem (empty by design)"></select>
+        <button type="button" class="btn">listen</button>
+      </div>
+    </div>
+  </section>
+  <script>
+  let  speech=new SpeechSynthesisUtterance();
+  let voices=[];
+  let select=document.querySelector("select");  
+   window.speechSynthesis.onvoiceschanged=()=>{
+    voices=window.speechSynthesis.getVoices();
+    speech.voice=voices[0]
+    voices.forEach((voice,i)=>(select.options[i]=new Option(voice.name,i
+    )))};
+    select.addEventListener("change",function(){
+        speech.voice=voices[select.value];
+    })
+let  btn=document.querySelector("button");
+btn.addEventListener("click",function(){
+    let inp=document.querySelector("textarea").value;
+    speech.text=inp;
+    window.speechSynthesis.speak(speech);
+})
+  </script>
+</body>
+</html>
